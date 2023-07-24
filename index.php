@@ -1,23 +1,19 @@
 <?php
-$page_title="";
+session_start();
+$page_title="index";
 $css_file="style.css";
+if(isset($_SESSION["name"])){
 include_once("./include/tamplete/header.php");
 require_once("./connect_db.php");
+require_once("./include/tamplete/function.php");
 
-global $con;
-$stmt = $con->prepare("SELECT * FROM data");
-$stmt->execute();
-$data=$stmt->fetchAll();
+$data = get_all_data("data");
 
 $del_id = @$_GET["id"];
 if(isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD']=="GET"){
     if(isset($_GET["id"])){
-    global $con;
-    $stmt=$con->prepare("DELETE FROM data WHERE id=?");
-    $stmt->execute(array($del_id));
-    header('location:index.php');
+   delete_by_id("data",$del_id);
 }
-    
 }
 
 ?>
@@ -54,10 +50,15 @@ if(isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD']=="GET"){
 
 
 <a href="add_students.php">add students</a>
-
+<br>
+<a href="logout.php">logout</a>
 
 
 
 <?php
 include_once("./include/tamplete/footer.php");
+}
+else{
+  header("location:login.php");
+}
 ?>
